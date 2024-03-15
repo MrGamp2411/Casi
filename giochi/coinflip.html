@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coin Flip Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .coin {
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Coin Flip Game</h2>
+    <p>Saldo: <span id="balance">100</span> Coins</p>
+    <p>Scommessa: <input type="number" id="bet" min="1" max="100"> Coins</p>
+    <p>Scegli su cosa puntare:</p>
+    <button onclick="chooseSide('heads')">Testa</button>
+    <button onclick="chooseSide('tails')">Croce</button>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/1_Italian_lira_coin_%281953-2001%29.png/120px-1_Italian_lira_coin_%281953-2001%29.png" alt="Coin" class="coin">
+    <button onclick="flipCoin()">Flip Coin</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    var balance = 100; // Saldo iniziale del giocatore
+    var selectedSide = null; // Lato selezionato
+
+    function chooseSide(side) {
+      selectedSide = side;
+    }
+
+    function flipCoin() {
+      if (!selectedSide) {
+        alert("Seleziona su cosa puntare: testa o croce.");
+        return;
+      }
+
+      var coin = document.querySelector('.coin');
+      var resultText = document.getElementById('result');
+      var bet = parseInt(document.getElementById('bet').value);
+
+      // Verifica se la scommessa è valida
+      if (bet <= 0 || bet > balance) {
+        resultText.textContent = "Scommessa non valida!";
+        return;
+      }
+
+      // Generare un numero casuale (0 o 1)
+      var randomNumber = Math.floor(Math.random() * 2);
+
+      var coinSide = (randomNumber === 0) ? 'Testa' : 'Croce';
+      
+      // Testa = 0, Croce = 1
+      if ((randomNumber === 0 && selectedSide === 'heads') || (randomNumber === 1 && selectedSide === 'tails')) {
+        coin.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/1_Italian_lira_coin_%281953-2001%29.png/120px-1_Italian_lira_coin_%281953-2001%29.png';
+        resultText.textContent = 'Hai vinto! È uscito ' + coinSide + '!';
+        balance += bet; // Aggiorna il saldo se vince
+      } else {
+        coin.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/1_Lira_Coin_Italy_1953.jpg/120px-1_Lira_Coin_Italy_1953.jpg';
+        resultText.textContent = 'Hai perso! È uscito ' + coinSide + '!';
+        balance -= bet; // Aggiorna il saldo se perde
+      }
+
+      // Aggiorna il saldo visualizzato
+      document.getElementById('balance').textContent = balance;
+    }
+  </script>
+</body>
+</html>

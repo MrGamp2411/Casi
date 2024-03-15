@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roulette</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .roulette {
+      width: 300px;
+      height: 300px;
+      border: 2px solid black;
+      border-radius: 50%;
+      position: relative;
+      margin: auto;
+    }
+    .ball {
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+    .number {
+      position: absolute;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+    }
+    table {
+      margin: 20px auto;
+    }
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+    }
+    .selected {
+      background-color: lightgreen;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Roulette</h2>
+    <p>Saldo: <span id="balance">100</span> Coins</p>
+    <p>Scommessa attuale: <span id="betAmount">0</span> Coins</p>
+    <p>Inserisci la tua scommessa: <input type="number" id="inputBet" min="1"></p>
+    <div class="roulette">
+      <div class="ball"></div>
+      <div class="number"></div>
+    </div>
+    <table>
+      <tr>
+        <td id="1" onclick="toggleBet(1)">1</td>
+        <td id="2" onclick="toggleBet(2)">2</td>
+        <td id="3" onclick="toggleBet(3)">3</td>
+        <td id="4" onclick="toggleBet(4)">4</td>
+        <td id="5" onclick="toggleBet(5)">5</td>
+      </tr>
+      <tr>
+        <td id="6" onclick="toggleBet(6)">6</td>
+        <td id="7" onclick="toggleBet(7)">7</td>
+        <td id="8" onclick="toggleBet(8)">8</td>
+        <td id="9" onclick="toggleBet(9)">9</td>
+        <td id="10" onclick="toggleBet(10)">10</td>
+      </tr>
+      <tr>
+        <td id="11" onclick="toggleBet(11)">11</td>
+        <td id="12" onclick="toggleBet(12)">12</td>
+        <td id="13" onclick="toggleBet(13)">13</td>
+        <td id="14" onclick="toggleBet(14)">14</td>
+        <td id="15" onclick="toggleBet(15)">15</td>
+      </tr>
+      <tr>
+        <td id="16" onclick="toggleBet(16)">16</td>
+        <td id="17" onclick="toggleBet(17)">17</td>
+        <td id="18" onclick="toggleBet(18)">18</td>
+        <td id="19" onclick="toggleBet(19)">19</td>
+        <td id="20" onclick="toggleBet(20)">20</td>
+      </tr>
+      <tr>
+        <td id="21" onclick="toggleBet(21)">21</td>
+        <td id="22" onclick="toggleBet(22)">22</td>
+        <td id="23" onclick="toggleBet(23)">23</td>
+        <td id="24" onclick="toggleBet(24)">24</td>
+        <td id="25" onclick="toggleBet(25)">25</td>
+      </tr>
+      <tr>
+        <td id="26" onclick="toggleBet(26)">26</td>
+        <td id="27" onclick="toggleBet(27)">27</td>
+        <td id="28" onclick="toggleBet(28)">28</td>
+        <td id="29" onclick="toggleBet(29)">29</td>
+        <td id="30" onclick="toggleBet(30)">30</td>
+      </tr>
+      <tr>
+        <td id="31" onclick="toggleBet(31)">31</td>
+        <td id="32" onclick="toggleBet(32)">32</td>
+        <td id="33" onclick="toggleBet(33)">33</td>
+        <td id="34" onclick="toggleBet(34)">34</td>
+        <td id="35" onclick="toggleBet(35)">35</td>
+      </tr>
+      <tr>
+        <td id="36" onclick="toggleBet(36)">36</td>
+        <td id="0" onclick="toggleBet(0)">0</td>
+      </tr>
+    </table>
+    <button onclick="spinRoulette()">Spin</button>
+  </div>
+
+  <script>
+    var balance = 100; // Saldo iniziale del giocatore
+    var currentBet = 0; // Scommessa attuale
+    var selectedNumbers = []; // Numeri selezionati dal giocatore
+
+    function toggleBet(number) {
+      var cell = document.getElementById(number.toString());
+      var index = selectedNumbers.indexOf(number);
+      if (index === -1) {
+        selectedNumbers = [number];
+        currentBet = number;
+        updateSelectedNumbers();
+      } else {
+        selectedNumbers = [];
+        currentBet = 0;
+        cell.classList.remove('selected');
+      }
+      updateBetAmount();
+    }
+
+    function spinRoulette() {
+      if (currentBet > 0) {
+        var roulette = document.querySelector('.roulette');
+        var ball = document.querySelector('.ball');
+        var number = document.querySelector('.number');
+
+        // Genera un numero casuale tra 0 e 36 (compreso)
+        var randomNumber = Math.floor(Math.random() * 37);
+
+        // Calcola l'angolo di rotazione
+        var angle = 360 / 37 * randomNumber;
+
+        // Ruota la roulette
+        roulette.style.transition = 'transform 3s ease-in-out';
+        roulette.style.transform = 'rotate(' + angle + 'deg)';
+
+        // Mostra la pallina e il numero
+        setTimeout(function() {
+          ball.style.display = 'block';
+          number.textContent = randomNumber;
+          number.style.display = 'block';
+
+          // Verifica se il numero è stato puntato
+          if (selectedNumbers.indexOf(randomNumber) !== -1) {
+            balance += currentBet * 36; // Paga 36 volte la scommessa se il numero è stato puntato
+          }
+
+          // Aggiorna il saldo
+          updateBalance();
+          currentBet = 0; // Resetta la scommessa attuale
+          updateBetAmount();
+          selectedNumbers = []; // Resetta i numeri selezionati
+          updateSelectedNumbers();
+        }, 3000);
+      } else {
+        alert("Devi scommettere prima di girare la roulette.");
+      }
+    }
+
+    function updateBalance() {
+      document.getElementById('balance').textContent = balance;
+    }
+
+    function updateBetAmount() {
+      document.getElementById('betAmount').textContent = currentBet;
+    }
+
+    function updateSelectedNumbers() {
+      var cells = document.getElementsByTagName('td');
+      for (var i = 0; i < cells.length; i++) {
+        var number = parseInt(cells[i].id);
+        if (selectedNumbers.indexOf(number) !== -1) {
+          cells[i].classList.add('selected');
+        } else {
+          cells[i].classList.remove('selected');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

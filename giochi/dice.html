@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dice Roll Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .die {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Dice Roll Game</h2>
+    <p>Saldo: <span id="balance">100</span> Coins</p>
+    <p>Scommessa: <input type="number" id="bet" min="1" max="100"> Coins</p>
+    <p>Scegli su cosa puntare:</p>
+    <button onclick="chooseBetType('even')">Pari</button>
+    <button onclick="chooseBetType('odd')">Dispari</button>
+    <br>
+    <p>Oppure scommetti su un numero specifico (da 1 a 6):</p>
+    <button onclick="chooseNumberBet(1)">1</button>
+    <button onclick="chooseNumberBet(2)">2</button>
+    <button onclick="chooseNumberBet(3)">3</button>
+    <button onclick="chooseNumberBet(4)">4</button>
+    <button onclick="chooseNumberBet(5)">5</button>
+    <button onclick="chooseNumberBet(6)">6</button>
+    <br><br>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Alea_1.png" alt="Die" class="die">
+    <button onclick="rollDie()">Roll Die</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    var balance = 100; // Saldo iniziale del giocatore
+    var selectedBetType = null; // Tipo di scommessa selezionata
+    var selectedNumber = null; // Numero selezionato
+
+    function chooseBetType(type) {
+      selectedBetType = type;
+      selectedNumber = null; // Resetta il numero selezionato se si è scelto pari o dispari
+    }
+
+    function chooseNumberBet(number) {
+      selectedNumber = number;
+      selectedBetType = null; // Resetta il tipo di scommessa selezionata se si è scelto un numero specifico
+    }
+
+    function rollDie() {
+      var die = document.querySelector('.die');
+      var resultText = document.getElementById('result');
+      var bet = parseInt(document.getElementById('bet').value);
+
+      // Verifica se la scommessa è valida
+      if (bet <= 0 || isNaN(bet) || (!selectedBetType && !selectedNumber)) {
+        resultText.textContent = "Scommessa non valida! Inserisci una bet.";
+        return;
+      }
+
+      // Se è stato scelto un numero specifico, controlla se la scommessa è valida
+      if (selectedNumber && (selectedNumber < 1 || selectedNumber > 6)) {
+        resultText.textContent = "Scegli un numero tra 1 e 6!";
+        return;
+      }
+
+      // Generare un numero casuale (1-6) per simulare il lancio del dado
+      var randomNumber = Math.floor(Math.random() * 6) + 1;
+
+      // Se è stato scelto un numero specifico, verifica se il risultato del lancio corrisponde
+      if (selectedNumber && selectedNumber == randomNumber) {
+        die.src = 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Alea_' + randomNumber + '.png';
+        resultText.textContent = 'Hai vinto! Il risultato del lancio è ' + randomNumber + '!';
+        balance += bet * 5; // Paga 5 volte la puntata se il numero specifico viene tirato
+      } else {
+        var rollResult = (randomNumber % 2 === 0) ? 'pari' : 'dispari';
+        die.src = 'https://upload.wikimedia.org/wikipedia/commons/2/2c/Alea_' + randomNumber + '.png';
+        if ((rollResult === 'pari' && selectedBetType === 'even') || (rollResult === 'dispari' && selectedBetType === 'odd')) {
+          resultText.textContent = 'Hai perso! Il risultato del lancio è ' + randomNumber + ', che è ' + rollResult + '!';
+          balance -= bet; // Aggiorna il saldo se perde con pari/dispari
+        } else {
+          resultText.textContent = 'Hai perso! Il risultato del lancio è ' + randomNumber + ', che è ' + rollResult + '!';
+          balance -= bet; // Aggiorna il saldo se perde con pari/dispari
+        }
+      }
+
+      // Aggiorna il saldo visualizzato
+      document.getElementById('balance').textContent = balance;
+    }
+  </script>
+</body>
+</html>

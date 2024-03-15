@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blackjack</title>
+<style>
+    /* Stili CSS per il gioco di Blackjack */
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    #game {
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    #dealer-hand, #player-hand {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        width: 60px;
+        height: 90px;
+        background-color: #fff;
+        border: 1px solid #000;
+        border-radius: 5px;
+        margin: 0 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    button {
+        margin: 0 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+</style>
+</head>
+<body>
+<h1>Blackjack</h1>
+<div id="game">
+    <h2>Banco</h2>
+    <div id="dealer-hand">
+        <!-- La prima carta del dealer verrà visualizzata qui -->
+    </div>
+    <div id="dealer-score">Punteggio: </div>
+    <h2>Giocatore</h2>
+    <div id="player-hand">
+        <!-- Le carte del giocatore verranno visualizzate qui -->
+    </div>
+    <div id="player-score">Punteggio: </div>
+    <button id="deal-button">Deal</button>
+    <button id="hit-button" disabled>Hit</button>
+    <button id="stand-button" disabled>Stand</button>
+</div>
+<script>
+    // JavaScript per il gioco di Blackjack
+    // Inizializza mazzo di carte
+    let deck = [];
+
+    // Inizializza carte giocatore e banco
+    let playerHand = [];
+    let dealerHand = [];
+
+    // Inizializza punteggi
+    let playerScore = 0;
+    let dealerScore = 0;
+
+    // Variabile per tenere traccia dello stato del gioco
+    let gameInProgress = false;
+
+    // Funzione per creare il mazzo di carte
+    function createDeck() {
+        const suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        
+        for (let suit of suits) {
+            for (let value of values) {
+                deck.push({ value, suit });
+            }
+        }
+    }
+
+    // Funzione per mescolare il mazzo di carte
+    function shuffleDeck() {
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+    }
+
+    // Funzione per distribuire una carta
+    function dealCard() {
+        return deck.pop();
+    }
+
+    // Funzione per iniziare il gioco
+    function startGame() {
+        // Creazione e mescolamento del mazzo
+        createDeck();
+        shuffleDeck();
+
+        // Distribuzione delle prime due carte al giocatore e al banco
+        dealerHand = [dealCard(), dealCard()];
+        playerHand = [dealCard(), dealCard()];
+
+        // Abilita i pulsanti Hit e Stand
+        document.getElementById('hit-button').disabled = false;
+        document.getElementById('stand-button').disabled = false;
+
+        // Abilita il gioco in corso
+        gameInProgress = true;
+
+        // Aggiorna l'interfaccia utente con le carte distribuite
+        render();
+    }
+
+    // Funzione per visualizzare le carte sullo schermo
+    function render() {
+        // Mostra solo la prima carta del dealer se il gioco è in corso
+        const dealerHandElement = document.getElementById('dealer-hand');
+        dealerHandElement.innerHTML = '';
+        if (gameInProgress) {
+            const dealerFirstCardElement = document.createElement('div');
+            dealerFirstCardElement.classList.add('card');
+            dealerFirstCardElement.textContent = dealerHand[0].value + ' ' + dealerHand[0].suit;
+            dealerHandElement.appendChild(dealerFirstCardElement);
+        } else {
+            dealerHand.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('card');
+                cardElement.textContent = card.value + ' ' + card.suit;
+                dealerHandElement.appendChild(cardElement);
+            });
+        }
+
+        // Mostra tutte le carte del giocatore
+        const playerHandElement = document.getElementById('player-hand');
+        playerHandElement.innerHTML = '';
+        playerHand.forEach(card => {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('card');
+            cardElement.textContent = card.value + ' ' + card.suit;
+            playerHandElement.appendChild(cardElement);
+        });
+
+        // Aggiorna i punteggi solo se il gioco è in corso
+        if (gameInProgress) {
+            calculateScores();
+        }
+
+        // Visualizza i punteggi solo se il gioco è in corso
+        if (gameInProgress) {
+            document.getElementById('dealer-score').textContent = 'Punteggio: ' + dealerScore;
+            document.getElementById('player-score').textContent = 'Punteggio: ' + playerScore;
+        }
+    }
+
+    // Funzione per calcolare i punteggi del giocatore e del dealer
+    function calculateScores() {
+        playerScore = calculateScore(playerHand);
+        dealerScore = calculateScore(dealerHand);
+    }
+
+    // Funzione per calcolare il punteggio di una mano
+    function calculateScore(hand) {
+        let score = 0;
+        let hasAce = false;
+
+        for (let card of hand) {
+            if (card.value === 'A') {
+                hasAce = true;
+            }
+            if (['J', 'Q', 'K'].includes(card.value)) {
+                score += 10;
+            } else if (card.value !== 'A') {
+                score += parseInt(card.value);
+            }
+        }
+
+        if (hasAce && score + 11 <= 21) {
+            score += 11;
+        } else if (hasAce) {
+            score += 1;
+        }
+
+        return score;
+    }
+
+    // Funzione per il turno del dealer
+    async function dealerTurn() {
+        while (dealerScore < 17) {
+            dealerHand.push(dealCard());
+            calculateScores();
+            render();
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Aspetta 1 secondo tra ogni carta del dealer
+        }
+    }
+
+    // Inizializza il gioco al caricamento della pagina
+    document.getElementById('deal-button').addEventListener('click', startGame);
+
+    // Aggiungi event listener per Hit e Stand
+    document.getElementById('hit-button').addEventListener('click', () => {
+        playerHand.push(dealCard());
+        render();
+    });
+
+    document.getElementById('stand-button').addEventListener('click', () => {
+        // Disabilita i pulsanti Hit e Stand
+        document.getElementById('hit-button').disabled = true;
+        document.getElementById('stand-button').disabled = true;
+
+        // Disabilita il gioco in corso
+        gameInProgress = false;
+
+        dealerTurn().then(() => {
+            render();
+        });
+    });
+</script>
+</body>
+</html>
