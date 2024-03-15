@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crush - Pagina di Gioco</title>
+    <style>
+        /* CSS per lo stile della pagina */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            text-align: right;
+        }
+        
+        main {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            min-height: 80vh;
+        }
+        
+        .game-interface {
+            text-align: center;
+        }
+        
+        .game-interface img {
+            max-width: 200px;
+        }
+        
+        .multiplier {
+            margin: 20px 0;
+            font-size: 24px;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="user-info">
+        <span>Benvenuto, <span id="username">NomeUtente</span></span>
+        <span>Saldo: <span id="balance">$1000</span></span>
+        <button id="logout-btn">Logout</button>
+    </div>
+</header>
+
+<main>
+    <div class="game-interface">
+        <div class="airplane">
+            <!-- Grafica dell'aereo che sale -->
+            <img src="airplane.png" alt="Airplane">
+        </div>
+        <div class="multiplier">
+            <!-- Moltiplicatore visuale -->
+            <span id="multiplier-value">1x</span>
+        </div>
+        <button id="cash-out-btn">Incassa</button>
+        <div class="bet-info">
+            <span>Scommessa:</span>
+            <input type="number" id="bet-amount" value="10">
+            <button id="place-bet-btn">Scommetti</button>
+        </div>
+    </div>
+
+    <div class="previous-results">
+        <!-- Grafico Storico -->
+        <canvas id="result-chart" width="400" height="200"></canvas>
+    </div>
+</main>
+
+<footer>
+    <nav>
+        <ul>
+            <li><a href="faq.html">FAQ</a></li>
+            <li><a href="terms.html">Termini e Condizioni</a></li>
+            <li><a href="contact.html">Contatti</a></li>
+        </ul>
+    </nav>
+    <p>&copy; 2024 Nome del Tuo Sito</p>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="game.js"></script> <!-- Inserisci qui il tuo script JavaScript per la logica del gioco -->
+
+</body>
+</html>
