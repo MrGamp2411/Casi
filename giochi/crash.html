@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crush - Pagina di Gioco</title>
+    <style>
+        /* CSS per lo stile della pagina */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            text-align: right;
+            position: fixed;
+            top: 0;
+            right: 0;
+        }
+        
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-interface {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .game-interface img {
+            max-width: 200px;
+        }
+        
+        .multiplier {
+            margin: 20px 0;
+            font-size: 24px;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+        
+        footer nav {
+            display: none; /* Nascondi il menu di navigazione */
+        }
+
+        #crash-message {
+            display: none;
+            color: red;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="user-info">
+        <span>Benvenuto, <span id="username">NomeUtente</span></span>
+        <span id="balance" style="margin-left: 10px;">Saldo: $1000</span>
+    </div>
+</header>
+
+<main>
+    <div class="game-interface">
+        <div class="airplane">
+            <!-- Grafica dell'aereo che sale -->
+            <img src="airplane.png" alt="Airplane">
+        </div>
+        <div class="multiplier">
+            <!-- Moltiplicatore visuale -->
+            <span id="multiplier-value">0.00x</span>
+        </div>
+        <button id="cash-out-btn">Incassa</button>
+        <div class="bet-info">
+            <span>Scommessa:</span>
+            <input type="number" id="bet-amount" value="10">
+            <button id="place-bet-btn">Scommetti</button>
+        </div>
+        <p id="crash-message">Aereo caduto! Hai perso la tua scommessa.</p>
+    </div>
+
+    <div class="previous-results">
+        <!-- Grafico Storico -->
+        <canvas id="result-chart" width="400" height="200"></canvas>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="crash/game.js"></script> <!-- Inserisci qui il tuo script JavaScript per la logica del gioco -->
+
+</body>
+</html>
