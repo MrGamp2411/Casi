@@ -4,12 +4,16 @@ function startGame() {
     var multiplier = document.getElementById('multiplier-value');
     var cashOutBtn = document.getElementById('cash-out-btn');
     var betAmountInput = document.getElementById('bet-amount');
+    var placeBetBtn = document.getElementById('place-bet-btn');
 
     // Aggiungi un evento al pulsante "Scommetti"
-    document.getElementById('place-bet-btn').addEventListener('click', function() {
+    placeBetBtn.addEventListener('click', function() {
         var betAmount = parseInt(betAmountInput.value);
         var balance = parseInt(document.getElementById('balance').textContent.substring(1)); // Rimuovi il simbolo '$' dal saldo
         var currentMultiplier = 1;
+
+        // Disabilita il pulsante "Scommetti" durante il gioco
+        placeBetBtn.disabled = true;
 
         // Funzione per aggiornare il moltiplicatore e far salire l'aereo
         function updateMultiplier() {
@@ -27,6 +31,8 @@ function startGame() {
             airplane.style.height = '0px';
             currentMultiplier = 1;
             multiplier.textContent = '1x';
+            // Riabilita il pulsante "Scommetti" dopo aver incassato
+            placeBetBtn.disabled = false;
         });
 
         // Avvia il gioco
@@ -41,6 +47,8 @@ function startGame() {
                 airplane.style.height = '0px';
                 currentMultiplier = 1;
                 multiplier.textContent = '1x';
+                // Riabilita il pulsante "Scommetti" dopo la fine del gioco
+                placeBetBtn.disabled = false;
             }
         }, 1000);
     });
